@@ -97,15 +97,6 @@ override fun buildAudioSink(
 
 对外接口（`play / pause / resume / stop / seekTo / isStopped`）一个字没改，上层页面零改动——这是"再生工程"里典型的一步：换实现，不换契约。
 
-### 几个踩过的坑
-
-| 现象 | 根因 | 修法 |
-| --- | --- | --- |
-| 高清曲目播放成白噪音 | 解码器对 24bit FLAC 输出 **float PCM**，处理器按 16bit 解析 | 按 `inputAudioFormat.encoding` 分支读写 |
-| Dock 上拉时有两个矩形、边缘毛糙 | 卡片 `shadowElevation` 按图层矩形投影，圆角下面压着直角影子 | 删掉 elevation，背景层再 clip 一次圆角 |
-| 上拉时"闪现一下没模糊的背景" | `Modifier.blur` 由进度阈值开关，动画中途才打开 | 不用 RenderEffect，位图取到时就模糊好 |
-| 全展开还能看见主界面 | 卡片底色淡出 + 背景淡入，中间同时半透明 | 底色恒不透明，只让背景层淡入 |
-| 音效面板拖到一半卡住 | 归位动画的 `LaunchedEffect` 依赖进度值，动画自己改进度又取消自己 | 归位改用独立 `Job`，只由一次手势触发 |
 
 ---
 
